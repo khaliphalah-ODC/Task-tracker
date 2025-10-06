@@ -1,10 +1,9 @@
-// let tasks = [];
+ let tasks = [];
 
 const taskInput = document.getElementById("taskInput");
 const addTaskBtn = document.getElementById("addTaskBtn");
 const taskList = document.getElementById("taskList");
 
-let tasks = [];
 
 
 function addTask() {
@@ -14,7 +13,7 @@ function addTask() {
         alert("Please enter a task!");
         return;
     }
-    tasks.push(taskText);
+    tasks.push({text: taskText, completed: false});
 
     showTasks();
 
@@ -29,7 +28,14 @@ function showTasks() {
         taskItem.classList.add("task-item");
 
         const taskText = document.createElement("span");
-        taskText.textContent = tasks[i];
+        taskText.textContent = tasks[i].text;
+
+        if(tasks[i].completed) {
+            taskText.classList.add("completed");
+        }
+
+        const completedBtn = document.createElement("button");
+        completedBtn.textContent = tasks[i].completed ? "Done" : "Completed";
 
         const updateBtn = document.createElement("button");
         updateBtn.textContent = "Update";
@@ -37,18 +43,25 @@ function showTasks() {
         const deleteBtn = document.createElement("button");
         deleteBtn.textContent = "Delete";
 
+        completedBtn.onclick = function () {
+            tasks[i].completed = !tasks[i].completed;
+            showTasks()
+        };
+
         deleteBtn.onclick = function () {
             tasks.splice(i, 1);
             showTasks();
         };
         updateBtn.onclick = function () {
-            const newTask = prompt("Edit your task: ", tasks[i]);
+            const newTask = prompt("Edit your task: ", tasks[i].text);
             if(newTask !== null && newTask.trim() !== ""){
-                tasks[i] = newTask.trim();
+                tasks[i].text = newTask.trim();
                 showTasks();
             }
         };
+      
         taskItem.appendChild(taskText);
+        taskItem.appendChild(completedBtn)
         taskItem.appendChild(updateBtn);
         taskItem.appendChild(deleteBtn);
 
